@@ -84,3 +84,6 @@ export default connect(mapStateToProps)(Wallet);
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
 };
+
+// APRENDI UM POUCO MAIS DE COMO FUNCIONA O OBJECT.KEYS NO SITE ABAIXO E FOI DE GRANDE AJUDA PARA CONCLUIR O REQ 5.
+// https://acervolima.com/como-converter-um-object-em-um-array-de-pares-de-valores-chave-em-javascript/#:~:text=M%C3%A9todo%201%3A%20Neste%20m%C3%A9todo%2C%20usaremos,conforme%20descrito%20no%20exemplo%20abaixo.
