@@ -1,12 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import getCurrencyQuote from '../services/getCurrencyQuote';
 
 class Wallet extends React.Component {
   state= {
     expenses: 0,
     valueInput: 0,
     currencyInput: '',
+    currencyQuote: [],
+  }
+
+  async componentDidMount() {
+    const getCurrency = await getCurrencyQuote();
+    this.setState({ currencyQuote: getCurrency });
   }
 
   handleChange = ({ target: { name, value } }) => {
@@ -16,8 +23,9 @@ class Wallet extends React.Component {
   render() {
     const { handleChange } = this;
     const { email } = this.props;
-    const { expenses, valueInput, currencyInput } = this.state;
-
+    const { expenses, valueInput, currencyInput, currencyQuote } = this.state;
+    const MAX_CHAR = 3;
+    console.log(currencyQuote);
     return (
       <main>
         <header className="header-wallet">
@@ -40,7 +48,7 @@ class Wallet extends React.Component {
             />
           </label>
           <label htmlFor="currency-input">
-            Moeda:
+            Moeda
             <select
               data-testid="currency-input"
               id="currency-input"
@@ -48,11 +56,16 @@ class Wallet extends React.Component {
               value={ currencyInput }
               onChange={ handleChange }
             >
-              <option>USD</option>
-              <option>CAD</option>
-              <option>EUR</option>
-              <option>GBP</option>
-              <option>ARS</option>
+              { Object.keys(currencyQuote)
+                .filter((element) => (element.length === MAX_CHAR))
+                .map((coin) => (
+                  <option
+                    key={ coin }
+                    data-testid={ coin }
+                  >
+                    {coin}
+                  </option>
+                ))}
             </select>
 
           </label>
