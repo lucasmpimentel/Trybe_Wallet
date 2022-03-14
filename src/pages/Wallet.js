@@ -2,13 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import getCurrencyQuote from '../services/getCurrencyQuote';
+import { saveExpendThunk } from '../actions';
+import Header from '../components/Header';
 
 class Wallet extends React.Component {
   state= {
-    expenses: 0,
-    valueInput: 0,
-    currencyInput: '',
+    description: '',
+    value: '',
+    currency: 'USD',
     currencyQuote: [],
+    method: '',
+    tag: '',
   }
 
   async componentDidMount() {
@@ -20,30 +24,73 @@ class Wallet extends React.Component {
     this.setState({ [name]: value });
   }
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+    const { dispatch } = this.props;
+    const {
+      description,
+      value,
+      currency,
+      method,
+      tag,
+    } = this.state;
+    const exchangeRates = {};
+    const currentExpense = {
+      description,
+      value,
+      currency,
+      method,
+      tag,
+      exchangeRates,
+    };
+    dispatch(saveExpendThunk(currentExpense));
+    this.setState({
+      description: '',
+      value: '',
+      currency: 'USD',
+      method: '',
+      tag: '',
+    });
+  }
+
   render() {
-    const { handleChange } = this;
-    const { email } = this.props;
-    const { expenses, valueInput, currencyInput, currencyQuote } = this.state;
+    const {
+      /* currentExpenses, */
+      value,
+      currency,
+      currencyQuote,
+      description,
+      method,
+      tag,
+    } = this.state;
+    const { handleChange, handleSubmit } = this;
     const MAX_CHAR = 3;
-    console.log(currencyQuote);
+
     return (
       <main>
-        <header className="header-wallet">
-          <div className="container-email-expenses">
-            <h5 data-testid="email-field">{ `Email: ${email}` }</h5>
-            <p data-testid="total-field">{ `Despesa total: ${expenses}`}</p>
-            <span data-testid="header-currency-field">BRL</span>
-          </div>
-        </header>
-        <form>
+        <Header />
+        <form onSubmit={ handleSubmit }>
+          <label htmlFor="description-input">
+            Descrição
+            <input
+              data-testid="description-input"
+              id="description-input"
+              type="text"
+              name="description"
+              placeholder="Com o que gastou?"
+              value={ description }
+              onChange={ handleChange }
+            />
+          </label>
           <label htmlFor="value-input">
-            Valor:
+            Valor
             <input
               data-testid="value-input"
               id="value-input"
               type="number"
-              name="valueInput"
-              value={ valueInput }
+              placeholder="Quanto gastou?"
+              name="value"
+              value={ value }
               onChange={ handleChange }
             />
           </label>
@@ -52,8 +99,8 @@ class Wallet extends React.Component {
             <select
               data-testid="currency-input"
               id="currency-input"
-              name="currencyInput"
-              value={ currencyInput }
+              name="currency"
+              value={ currency }
               onChange={ handleChange }
             >
               { Object.keys(currencyQuote)
@@ -67,22 +114,48 @@ class Wallet extends React.Component {
                   </option>
                 ))}
             </select>
-
           </label>
+          <select
+            data-testid="method-input"
+            id="method-input"
+            name="method"
+            placeholder="Tipo de Pagamento"
+            value={ method }
+            onChange={ handleChange }
+          >
+            <option>Dinheiro</option>
+            <option>Cartão de crédito</option>
+            <option>Cartão de débito</option>
+          </select>
+          <select
+            data-testid="tag-input"
+            id="tag-input"
+            name="tag"
+            placeholder="Categoria"
+            value={ tag }
+            onChange={ handleChange }
+          >
+            <option>Alimentação</option>
+            <option>Lazer</option>
+            <option>Trabalho</option>
+            <option>Transporte</option>
+            <option>Saúde</option>
+          </select>
+          <button
+            type="submit"
+          >
+            Adicionar despesa
+          </button>
         </form>
       </main>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  email: state.user.email,
-});
-
-export default connect(mapStateToProps)(Wallet);
+export default connect()(Wallet);
 
 Wallet.propTypes = {
-  email: PropTypes.string.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 // APRENDI UM POUCO MAIS DE COMO FUNCIONA O OBJECT.KEYS NO SITE ABAIXO E FOI DE GRANDE AJUDA PARA CONCLUIR O REQ 5.

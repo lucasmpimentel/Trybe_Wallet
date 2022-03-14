@@ -12,10 +12,9 @@ class Login extends React.Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const { history, emailDispatch } = this.props;
+    const { history, dispatch } = this.props;
     const { email } = this.state;
-    /* dispatch(newUser(email)); */
-    emailDispatch(email);
+    dispatch(newUser(email));
     history.push('/carteira');
   }
 
@@ -68,14 +67,10 @@ class Login extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  emailDispatch: (email) => dispatch(newUser(email)),
-});
-
-export default connect(null, mapDispatchToProps)(Login);
+export default connect()(Login);
 
 Login.propTypes = {
-  emailDispatch: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
