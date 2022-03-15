@@ -3,11 +3,16 @@ import { connect } from 'react-redux';
 import PropTypes, { oneOfType } from 'prop-types';
 
 class Table extends Component {
+  handleDeleteClick = (event) => {
+    console.log(event);
+  }
+
   render() {
     const { expenses } = this.props;
+    const { handleDeleteClick } = this;
     return (
       <table>
-        <thead>
+        <tbody>
           <tr>
             <th>Descrição</th>
             <th>Tag</th>
@@ -19,43 +24,56 @@ class Table extends Component {
             <th>Moeda de conversão</th>
             <th>Editar/Excluir</th>
           </tr>
-        </thead>
-        {/* { expenses.length === 0 && (
-          <tr>
-            <td>
-              <p>Desculpe, mas ainda não existem despesas salvas.</p>
-            </td>
-          </tr>
-        )} */}
-        { expenses.length !== 0 && (
-          expenses.map((expense) => (
-            <tr key={ expense.id }>
-              <td>
-                {expense.description}
+          { expenses.length === 0 && (
+            <tr>
+              <td colSpan="9">
+                Desculpe, mas ainda não existem despesas salvas.
               </td>
-              <td>
-                {expense.tag}
-              </td>
-              <td>
-                {expense.method}
-              </td>
-              <td>
-                {parseFloat(expense.value).toFixed(2)}
-              </td>
-              <td>
-                {expense.exchangeRates[expense.currency].name}
-              </td>
-              <td>
-                {parseFloat(expense.exchangeRates[expense.currency].ask).toFixed(2)}
-              </td>
-              <td>
-                {parseFloat(Number(expense.value)
-                  * Number(expense.exchangeRates[expense.currency].ask)).toFixed(2)}
-              </td>
-              <td>Real</td>
             </tr>
-          ))
-        )}
+          )}
+          { expenses.length !== 0 && (
+            expenses.map((expense) => (
+              <tr key={ expense.id }>
+                <td>
+                  {expense.description}
+                </td>
+                <td>
+                  {expense.tag}
+                </td>
+                <td>
+                  {expense.method}
+                </td>
+                <td>
+                  {parseFloat(expense.value).toFixed(2)}
+                </td>
+                <td>
+                  {expense.exchangeRates[expense.currency].name}
+                </td>
+                <td>
+                  {parseFloat(expense.exchangeRates[expense.currency].ask).toFixed(2)}
+                </td>
+                <td>
+                  {parseFloat(Number(expense.value)
+                    * Number(expense.exchangeRates[expense.currency].ask)).toFixed(2)}
+                </td>
+                <td>
+                  Real
+                </td>
+                <td className="table-edition-buttons">
+                  <button type="button" onClick="">Editar</button>
+                  <button
+                    data-testid="delete-btn"
+                    type="button"
+                    onClick={ handleDeleteClick }
+                  >
+                    Excluir
+                  </button>
+                </td>
+
+              </tr>
+            ))
+          )}
+        </tbody>
       </table>
     );
   }
