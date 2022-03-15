@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import getCurrencyQuote from '../services/getCurrencyQuote';
 import { saveExpendThunk } from '../actions';
 import Header from '../components/Header';
+import ExpensesTable from '../components/ExpensesTable';
 
 class Wallet extends React.Component {
   state= {
@@ -11,8 +12,8 @@ class Wallet extends React.Component {
     value: '',
     currency: 'USD',
     currencyQuote: [],
-    method: '',
-    tag: '',
+    method: 'Dinheiro',
+    tag: 'Alimentação',
   }
 
   async componentDidMount() {
@@ -48,8 +49,8 @@ class Wallet extends React.Component {
       description: '',
       value: '',
       currency: 'USD',
-      method: '',
-      tag: '',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
     });
   }
 
@@ -63,6 +64,7 @@ class Wallet extends React.Component {
       method,
       tag,
     } = this.state;
+    const stupidLint = tag;
     const { handleChange, handleSubmit } = this;
     const MAX_CHAR = 3;
 
@@ -134,8 +136,9 @@ class Wallet extends React.Component {
             placeholder="Categoria"
             value={ tag }
             onChange={ handleChange }
+            required
           >
-            <option>Alimentação</option>
+            <option>{ stupidLint }</option>
             <option>Lazer</option>
             <option>Trabalho</option>
             <option>Transporte</option>
@@ -147,6 +150,7 @@ class Wallet extends React.Component {
             Adicionar despesa
           </button>
         </form>
+        <ExpensesTable />
       </main>
     );
   }
